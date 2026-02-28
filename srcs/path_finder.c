@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   path_finder.c                                      :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: farmoham <farmoham@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2026/02/28 16:07:37 by farmoham          #+#    #+#             */
+/*   Updated: 2026/02/28 16:08:03 by farmoham         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "minishell.h"
 
 static char	*find_executable(char *cmd, char **paths)
@@ -46,7 +58,7 @@ char	*get_path(char *cmd, t_env *env)
 
 	if (!cmd || !*cmd)
 		return (NULL);
-	if (ft_strchr(cmd, '/')) // path is already constructed by the user
+	if (ft_strchr(cmd, '/'))
 		return (direct_path(cmd));
 	path_value = env_get(env, "PATH");
 	if (!path_value)

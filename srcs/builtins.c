@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   builtins.c                                         :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: farmoham <farmoham@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2026/02/28 15:41:26 by farmoham          #+#    #+#             */
+/*   Updated: 2026/02/28 15:46:56 by farmoham         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "minishell.h"
 
 /*
@@ -20,25 +32,16 @@ static int	builtin_cd(char **argv, t_env **env)
 }
 
 /*
-** export builtin
+** pwd builtin
 */
-static int	builtin_export(char **argv, t_env **env)
+static int	builtin_pwd(void)
 {
-	int		i;
-	char	*eq;
+	char	cwd[4096];
 
-	i = 1;
-	while (argv[i])
-	{
-		eq = ft_strchr(argv[i], '=');
-		if (eq)
-		{
-			*eq = '\0';
-			env_set(env, argv[i], eq + 1);
-			*eq = '=';
-		}
-		i++;
-	}
+	if (!getcwd(cwd, sizeof(cwd)))
+		return (1);
+	write(1, cwd, ft_strlen(cwd));
+	write(1, "\n", 1);
 	return (0);
 }
 
@@ -48,14 +51,22 @@ static int	builtin_export(char **argv, t_env **env)
 static int	builtin_unset(char **argv, t_env **env)
 {
 	int	i;
+	int	status;
 
 	i = 1;
+	status = 0;
 	while (argv[i])
 	{
-		env_unset(env, argv[i]);
+		if (!valid_identifier(argv[i]))
+		{
+			write(2, "unset: not a valid identifier\n", 31);
+			status = 1;
+		}
+		else
+			env_unset(env, argv[i]);
 		i++;
 	}
-	return (0);
+	return (status);
 }
 
 /*
@@ -63,8 +74,9 @@ static int	builtin_unset(char **argv, t_env **env)
 */
 static int	builtin_exit(char **argv)
 {
-	int	status = 0;
+	int	status;
 
+	status = 0;
 	if (argv[1])
 		status = ft_atoi(argv[1]);
 	return (status);
@@ -73,7 +85,7 @@ static int	builtin_exit(char **argv)
 /*
 ** Execute builtin
 */
-int exec_builtin(t_command *cmd, t_shell *s)
+int	exec_builtin(t_command *cmd, t_shell *s)
 {
 	char	**argv;
 
@@ -89,9 +101,9 @@ int exec_builtin(t_command *cmd, t_shell *s)
 	else if (!ft_strcmp(argv[0], "env"))
 		return (builtin_env(s->env));
 	else if (!ft_strcmp(argv[0], "export"))
-		return (builtin_export(argv, &s->env));
+		return (builtin_export(argv, &(s->env)));
 	else if (!ft_strcmp(argv[0], "unset"))
-		return (builtin_unset(argv, &s->env));
+		return (builtin_unset(argv, &(s->env)));
 	else if (!ft_strcmp(argv[0], "exit"))
 		return (builtin_exit(argv));
 	return (1);

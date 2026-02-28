@@ -51,10 +51,10 @@ static size_t	get_word_len(char const *s, size_t i, char c)
 
 char	**ft_split(char const *s, char c)
 {
-	char			**splitted;
-	size_t			current_word;
-	size_t			i;
-	size_t			j;
+	char	**splitted;
+	size_t	current_word;
+	size_t	i;
+	size_t	j;
 
 	i = 0;
 	current_word = 0;

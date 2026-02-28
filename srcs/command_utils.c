@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   command_utils.c                                    :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: farmoham <farmoham@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2026/02/28 15:41:28 by farmoham          #+#    #+#             */
+/*   Updated: 2026/02/28 15:47:37 by farmoham         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "minishell.h"
 
 /* ================= NEW COMMAND ================= */
@@ -44,8 +56,7 @@ int	add_argument(t_command *cmd, char *value)
 }
 
 /* ================= ADD REDIRECTION ================= */
-int	add_redirection(t_command *cmd,
-	int type, char *file, int quoted)
+int	add_redirection(t_command *cmd, int type, char *file, int quoted)
 {
 	t_redir	*new;
 	t_redir	*tmp;

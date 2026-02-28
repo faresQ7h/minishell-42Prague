@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   expander_utils.c                                   :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: farmoham <farmoham@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2026/02/28 15:59:29 by farmoham          #+#    #+#             */
+/*   Updated: 2026/02/28 15:59:39 by farmoham         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "minishell.h"
 
 /* ================= EXPAND $? ================= */
@@ -21,16 +33,13 @@ static void	expand_env_variable(t_expand *e)
 
 	e->i++;
 	start = e->i;
-	while (e->str[e->i]
-		&& (ft_isalnum(e->str[e->i])
-		|| e->str[e->i] == '_'))
+	while (e->str[e->i] && (ft_isalnum(e->str[e->i]) || e->str[e->i] == '_'))
 		e->i++;
 	name = ft_substr(e->str, start, e->i - start);
 	e->i--;
 	value = env_get(e->env, name);
 	if (value)
-		e->result = append_str(
-			e->result, ft_strdup(value));
+		e->result = append_str(e->result, ft_strdup(value));
 	free(name);
 }
 
@@ -43,11 +52,9 @@ void	expand_variable(t_expand *e)
 		expand_exit_status(e);
 		return ;
 	}
-	if (!ft_isalnum(e->str[e->i + 1])
-		&& e->str[e->i + 1] != '_')
+	if (!ft_isalnum(e->str[e->i + 1]) && e->str[e->i + 1] != '_')
 	{
-		e->result = ft_strjoin_char(
-			e->result, '$');
+		e->result = ft_strjoin_char(e->result, '$');
 		return ;
 	}
 	expand_env_variable(e);

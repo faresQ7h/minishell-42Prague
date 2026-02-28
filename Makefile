@@ -43,7 +43,8 @@ SRCS		= main.c \
               redirections.c \
               executor.c \
               executor_utils.c \
-              prompt.c
+              prompt.c \
+              wait.c
 
 SRCS		:= $(addprefix $(SRC_DIR)/, $(SRCS))
 OBJS		:= $(SRCS:.c=.o)

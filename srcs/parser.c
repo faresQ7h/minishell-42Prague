@@ -1,7 +1,18 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   parser.c                                           :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: farmoham <farmoham@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2026/02/28 16:07:14 by farmoham          #+#    #+#             */
+/*   Updated: 2026/02/28 16:07:28 by farmoham         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "minishell.h"
 
-static int	init_parser(t_token *tokens,
-	t_command **head, t_command **current)
+static int	init_parser(t_token *tokens, t_command **head, t_command **current)
 {
 	if (!tokens || tokens->type == T_PIPE)
 		return (0);
@@ -12,18 +23,16 @@ static int	init_parser(t_token *tokens,
 	return (1);
 }
 
-static int	process_token(t_token **tokens,
-	t_command **current, t_command *head)
+static int	process_token(t_token **tokens, t_command **current,
+		t_command *head)
 {
 	if ((*tokens)->type == T_PIPE)
 	{
 		if (!handle_pipe(tokens, current))
 			return (free_commands(head), 0);
 	}
-	else if ((*tokens)->type == T_REDIR_IN
-		|| (*tokens)->type == T_REDIR_OUT
-		|| (*tokens)->type == T_APPEND
-		|| (*tokens)->type == T_HEREDOC)
+	else if ((*tokens)->type == T_REDIR_IN || (*tokens)->type == T_REDIR_OUT
+		|| (*tokens)->type == T_APPEND || (*tokens)->type == T_HEREDOC)
 	{
 		if (!handle_redirection(tokens, *current))
 			return (free_commands(head), 0);

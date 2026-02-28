@@ -1,5 +1,16 @@
-#include "minishell.h"
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   lexer_extract.c                                    :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: farmoham <farmoham@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2026/02/28 16:02:59 by farmoham          #+#    #+#             */
+/*   Updated: 2026/02/28 16:03:05 by farmoham         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
 
+#include "minishell.h"
 
 /* ================= EXTRACT QUOTED PART ================= */
 
@@ -26,11 +37,8 @@ static char	*extract_plain_part(char *line, int *i)
 	int	start;
 
 	start = *i;
-	while (line[*i]
-		&& !is_space(line[*i])
-		&& !is_operator(line[*i])
-		&& line[*i] != '\''
-		&& line[*i] != '"')
+	while (line[*i] && !is_space(line[*i]) && !is_operator(line[*i])
+		&& line[*i] != '\'' && line[*i] != '"')
 		(*i)++;
 	return (ft_substr(line, start, *i - start));
 }
@@ -44,9 +52,7 @@ char	*extract_word(char *line, int *i)
 	char	*tmp;
 
 	word = NULL;
-	while (line[*i]
-		&& !is_space(line[*i])
-		&& !is_operator(line[*i]))
+	while (line[*i] && !is_space(line[*i]) && !is_operator(line[*i]))
 	{
 		if (line[*i] == '\'' || line[*i] == '"')
 			part = extract_quoted_part(line, i);

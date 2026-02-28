@@ -1,9 +1,20 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   lexer_token.c                                      :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: farmoham <farmoham@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2026/02/28 16:03:20 by farmoham          #+#    #+#             */
+/*   Updated: 2026/02/28 16:04:20 by farmoham         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "minishell.h"
 
 /* ================= ADD TOKEN ================= */
 
-int	add_token(t_token **head,
-	char *value, t_token_type type)
+int	add_token(t_token **head, char *value, t_token_type type)
 {
 	t_token	*new;
 	t_token	*tmp;

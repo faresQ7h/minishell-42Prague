@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   env.c                                              :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: farmoham <farmoham@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2026/02/28 15:41:33 by farmoham          #+#    #+#             */
+/*   Updated: 2026/02/28 15:51:43 by farmoham         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "minishell.h"
 
 /*
@@ -6,32 +18,13 @@
 t_env	*env_init(char **envp)
 {
 	t_env	*env;
-	t_env	*node;
-	t_env	*tmp;
-	char	*key;
 	int		i;
 
 	env = NULL;
 	i = 0;
 	while (envp[i])
 	{
-		if (ft_strchr(envp[i], '='))
-		{
-			key = ft_substr(envp[i], 0,
-					ft_strchr(envp[i], '=') - envp[i]);
-			node = env_new(key,
-					ft_strchr(envp[i], '=') + 1);
-			free(key);
-			if (!env)
-				env = node;
-			else
-			{
-				tmp = env;
-				while (tmp->next)
-					tmp = tmp->next;
-				tmp->next = node;
-			}
-		}
+		env_add_from_envp(&env, envp[i]);
 		i++;
 	}
 	return (env);

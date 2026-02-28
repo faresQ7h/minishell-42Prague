@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   parser_utils.c                                     :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: farmoham <farmoham@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2026/02/28 16:07:01 by farmoham          #+#    #+#             */
+/*   Updated: 2026/02/28 16:07:06 by farmoham         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "minishell.h"
 
 /* ================= PIPE ================= */
@@ -63,14 +75,12 @@ int	handle_redirection(t_token **tok, t_command *cmd)
 		return (0);
 	file = next->value;
 	quoted = 0;
-	if ((*tok)->type == T_HEREDOC
-		&& contains_quote(file))
+	if ((*tok)->type == T_HEREDOC && contains_quote(file))
 	{
 		quoted = 1;
 		file = remove_quotes(file);
 	}
-	if (!add_redirection(cmd,
-			(*tok)->type, file, quoted))
+	if (!add_redirection(cmd, (*tok)->type, file, quoted))
 		return (0);
 	if (quoted)
 		free(file);

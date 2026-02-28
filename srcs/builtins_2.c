@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   builtins_2.c                                       :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: farmoham <farmoham@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2026/02/28 15:41:18 by farmoham          #+#    #+#             */
+/*   Updated: 2026/02/28 15:46:20 by farmoham         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "minishell.h"
 
 /*
@@ -52,20 +64,6 @@ int	builtin_echo(char **argv)
 }
 
 /*
-** pwd builtin
-*/
-int	builtin_pwd(void)
-{
-	char	cwd[4096];
-
-	if (!getcwd(cwd, sizeof(cwd)))
-		return (1);
-	write(1, cwd, ft_strlen(cwd));
-	write(1, "\n", 1);
-	return (0);
-}
-
-/*
 ** env builtin
 */
 int	builtin_env(t_env *env)
@@ -82,4 +80,40 @@ int	builtin_env(t_env *env)
 		env = env->next;
 	}
 	return (0);
+}
+
+/*
+** export builtin
+*/
+static void	export_error_set_status(int *status)
+{
+	write(2, "export: not a valid identifier\n", 32);
+	*status = 1;
+}
+
+int	builtin_export(char **argv, t_env **env)
+{
+	int		i;
+	char	*eq;
+	int		status;
+
+	i = 1;
+	status = 0;
+	while (argv[i])
+	{
+		eq = ft_strchr(argv[i], '=');
+		if (eq)
+		{
+			*eq = '\0';
+			if (!valid_identifier(argv[i]))
+				export_error_set_status(&status);
+			else
+				env_set(env, argv[i], eq + 1);
+			*eq = '=';
+		}
+		else if (!valid_identifier(argv[i]))
+			export_error_set_status(&status);
+		i++;
+	}
+	return (status);
 }

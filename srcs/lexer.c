@@ -1,9 +1,20 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   lexer.c                                            :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: farmoham <farmoham@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2026/02/28 16:04:44 by farmoham          #+#    #+#             */
+/*   Updated: 2026/02/28 16:05:05 by farmoham         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "minishell.h"
 
 /* ================= PROCESS OPERATOR ================= */
 
-static int	process_operator(t_token **head,
-	char *line, int *i)
+static int	process_operator(t_token **head, char *line, int *i)
 {
 	char	*op;
 
@@ -18,8 +29,7 @@ static int	process_operator(t_token **head,
 
 /* ================= PROCESS WORD ================= */
 
-static int	process_word(t_token **head,
-	char *line, int *i)
+static int	process_word(t_token **head, char *line, int *i)
 {
 	char	*word;
 
@@ -36,8 +46,8 @@ static int	process_word(t_token **head,
 
 t_token	*lexer(char *line)
 {
-	t_token	*head;
-	int		i;
+	t_token		*head;
+	int			i;
 
 	head = NULL;
 	i = 0;

@@ -1,29 +1,58 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   heredoc.c                                          :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: farmoham <farmoham@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2026/02/28 16:00:28 by farmoham          #+#    #+#             */
+/*   Updated: 2026/02/28 16:00:29 by farmoham         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "minishell.h"
+
+static int	heredoc_interrupt(int fd[2], t_shell *s, char *line)
+{
+	free(line);
+	g_sig = 0;
+	close(fd[0]);
+	close(fd[1]);
+	s->exit_status = 130;
+	return (0);
+}
+
+static void	heredoc_write_line(t_redir *r, t_shell *s, int write_fd, char *line)
+{
+	char	*tmp;
+
+	if (!r->quoted)
+	{
+		tmp = expand_string(line, s->env, s->exit_status);
+		free(line);
+		line = tmp;
+	}
+	write(write_fd, line, ft_strlen(line));
+	write(write_fd, "\n", 1);
+	free(line);
+}
 
 static int	prepare_heredoc(t_redir *r, t_shell *s)
 {
 	int		fd[2];
 	char	*line;
-	char	*tmp;
 
+	g_sig = 0;
 	if (pipe(fd) == -1)
 		return (0);
 	while (1)
 	{
 		line = readline("> ");
 		if (g_sig == 130)
-			return (close(fd[0]), close(fd[1]), s->exit_status = 130, 0);
+			return (heredoc_interrupt(fd, s, line));
 		if (!line || ft_strcmp(line, r->file) == 0)
 			break ;
-		if (!r->quoted)
-		{
-			tmp = expand_string(line, s->env, s->exit_status);
-			free(line);
-			line = tmp;
-		}
-		write(fd[1], line, ft_strlen(line));
-		write(fd[1], "\n", 1);
-		free(line);
+		heredoc_write_line(r, s, fd[1], line);
 	}
 	free(line);
 	close(fd[1]);
@@ -40,8 +69,7 @@ int	process_heredocs(t_command *cmds, t_shell *shell)
 		r = cmds->redirs;
 		while (r)
 		{
-			if (r->type == T_HEREDOC &&
-				!prepare_heredoc(r, shell))
+			if (r->type == T_HEREDOC && !prepare_heredoc(r, shell))
 				return (0);
 			r = r->next;
 		}

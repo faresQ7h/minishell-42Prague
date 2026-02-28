@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   redirections.c                                     :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: farmoham <farmoham@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2026/02/28 16:09:09 by farmoham          #+#    #+#             */
+/*   Updated: 2026/02/28 16:09:27 by farmoham         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "minishell.h"
 
 static int	redir_append(t_redir *r)
@@ -24,43 +36,43 @@ static int	redir_output(t_redir *r)
 	return (1);
 }
 
-static int redir_input(t_redir *r)
+static int	redir_input(t_redir *r)
 {
-    int fd;
+	int	fd;
 
-    fd = open(r->file, O_RDONLY);
-    if (fd < 0)
-        return (0);
-    dup2(fd, STDIN_FILENO);
-    close(fd);
-    return (1);
+	fd = open(r->file, O_RDONLY);
+	if (fd < 0)
+		return (0);
+	dup2(fd, STDIN_FILENO);
+	close(fd);
+	return (1);
 }
 
-static int handle_heredoc(t_redir *r)
+static int	handle_heredoc(t_redir *r)
 {
-    if (r->read_fd < 0)
-        return (0);
-    dup2(r->read_fd, STDIN_FILENO);
-    close(r->read_fd);
-    return (1);
+	if (r->read_fd < 0)
+		return (0);
+	dup2(r->read_fd, STDIN_FILENO);
+	close(r->read_fd);
+	return (1);
 }
 
-int apply_redirections(t_command *cmd)
+int	apply_redirections(t_command *cmd)
 {
-    t_redir *r;
+	t_redir		*r;
 
-    r = cmd->redirs;
-    while (r)
-    {
-        if (r->type == T_REDIR_IN && !redir_input(r))
-            return (0);
-        else if (r->type == T_REDIR_OUT && !redir_output(r))
-            return (0);
-        else if (r->type == T_APPEND && !redir_append(r))
-            return (0);
-        else if (r->type == T_HEREDOC && !handle_heredoc(r))
+	r = cmd->redirs;
+	while (r)
+	{
+		if (r->type == T_REDIR_IN && !redir_input(r))
 			return (0);
-        r = r->next;
-    }
-    return (1);
+		else if (r->type == T_REDIR_OUT && !redir_output(r))
+			return (0);
+		else if (r->type == T_APPEND && !redir_append(r))
+			return (0);
+		else if (r->type == T_HEREDOC && !handle_heredoc(r))
+			return (0);
+		r = r->next;
+	}
+	return (1);
 }

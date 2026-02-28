@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   executor.c                                         :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: farmoham <farmoham@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2026/02/28 15:58:55 by farmoham          #+#    #+#             */
+/*   Updated: 2026/02/28 15:58:56 by farmoham         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "minishell.h"
 
 static int	is_single_builtin(t_command *cmd)
@@ -11,78 +23,71 @@ static int	is_single_builtin(t_command *cmd)
 	return (1);
 }
 
-static void reset_fds(int saved_stdin, int saved_stdout)
+static void	reset_fds(int saved_stdin, int saved_stdout)
 {
 	dup2(saved_stdin, STDIN_FILENO);
-	dup2(saved_stdout, STDOUT_FILENO); 
+	dup2(saved_stdout, STDOUT_FILENO);
 	close(saved_stdin);
 	close(saved_stdout);
 }
 
-static int exec_single(t_command *cmd, t_shell *s)
+static int	exec_single(t_command *cmd, t_shell *s)
 {
-    int saved_stdin;
-    int saved_stdout;
-	int status;
+	int	saved_stdin;
+	int	saved_stdout;
+	int	status;
 
-    saved_stdin = dup(STDIN_FILENO);
-    saved_stdout = dup(STDOUT_FILENO);
+	saved_stdin = dup(STDIN_FILENO);
+	saved_stdout = dup(STDOUT_FILENO);
 	status = 0;
 	if (!apply_redirections(cmd))
-    {    
-		s->exit_status = 1;
-		return (reset_fds(saved_stdin, saved_stdout), 0);
-	}
-    if (!ft_strcmp(cmd->args[0], "exit"))
-    {
-        write(1, "exit\n", 5);
-        if (cmd->args[1])
+		return (s->exit_status = 1, reset_fds(saved_stdin, saved_stdout), 0);
+	if (!ft_strcmp(cmd->args[0], "exit"))
+	{
+		write(1, "exit\n", 5);
+		if (cmd->args[1])
 			status = ft_atoi(cmd->args[1]);
+		free_commands(cmd);
+		free_env(s->env);
+		rl_clear_history();
 		exit(status);
-    }
-    s->exit_status = exec_builtin(cmd, s);
+	}
+	s->exit_status = exec_builtin(cmd, s);
 	return (reset_fds(saved_stdin, saved_stdout), 1);
 }
 
 static void	exec_loop(t_command *cmds, t_shell *s)
 {
-	int		prev_fd;
-	int		pipe_fd[2];
+	int	prev_fd;
+	int	pipe_fd[2];
 
 	prev_fd = -1;
 	while (cmds)
 	{
-		if (cmds->next && pipe(pipe_fd) == -1) // if there is a next command, then creat a pipe
+		if (cmds->next && pipe(pipe_fd) == -1)
 			return ;
-		if (fork_process(cmds, s, prev_fd, pipe_fd) == -1) // we creat a process to the command
+		if (fork_process(cmds, s, prev_fd, pipe_fd) == -1)
 			return ;
 		parent_fds(&prev_fd, pipe_fd, (cmds->next != NULL));
 		cmds = cmds->next;
 	}
 }
 
-void executor(t_command *cmds, t_shell *s)
+void	executor(t_command *cmds, t_shell *s)
 {
-	int     status;
-	pid_t   pid;
 	if (!cmds)
 		return ;
-	///check her if it is a single built in command, if yes, then no need to fork and we will directelly excute it
+	s->cmds_head = cmds;
 	if (is_single_builtin(cmds))
 	{
 		exec_single(cmds, s);
-		return;
+		s->cmds_head = NULL;
+		return ;
 	}
 	s->last_pid = -1;
+	init_signals_exec();
 	exec_loop(cmds, s);
-	while ((pid = wait(&status)) > 0)
-	{
-		if (pid == s->last_pid)
-		{
-			if (WIFEXITED(status))
-				s->exit_status = WEXITSTATUS(status);
-			else if (WIFSIGNALED(status))
-				s->exit_status = 128 + WTERMSIG(status);
-		}
-	} //main process will wait for all childrens, and one children will be created for each command
+	wait_children(s);
+	init_signals_interactive();
+	s->cmds_head = NULL;
 }

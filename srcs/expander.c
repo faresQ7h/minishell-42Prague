@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   expander.c                                         :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: farmoham <farmoham@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2026/02/28 15:59:47 by farmoham          #+#    #+#             */
+/*   Updated: 2026/02/28 15:59:53 by farmoham         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "minishell.h"
 
 /* ================= HANDLE CHAR ================= */
@@ -11,14 +23,12 @@ static void	handle_char(t_expand *e)
 	else if (e->str[e->i] == '$' && !e->single)
 		expand_variable(e);
 	else
-		e->result = ft_strjoin_char(
-			e->result, e->str[e->i]);
+		e->result = ft_strjoin_char(e->result, e->str[e->i]);
 }
 
 /* ================= EXPAND STRING ================= */
 
-char	*expand_string(char *str,
-	t_env *env, int last_status)
+char	*expand_string(char *str, t_env *env, int last_status)
 {
 	t_expand	e;
 
@@ -41,8 +51,7 @@ char	*expand_string(char *str,
 
 /* ================= EXPAND ARGS ================= */
 
-static void	expand_args(t_command *cmd,
-	t_env *env, int last_status)
+static void	expand_args(t_command *cmd, t_env *env, int last_status)
 {
 	int		i;
 	char	*new;
@@ -50,8 +59,7 @@ static void	expand_args(t_command *cmd,
 	i = 0;
 	while (cmd->args && cmd->args[i])
 	{
-		new = expand_string(
-			cmd->args[i], env, last_status);
+		new = expand_string(cmd->args[i], env, last_status);
 		free(cmd->args[i]);
 		cmd->args[i] = new;
 		i++;
@@ -62,8 +70,7 @@ static void	expand_args(t_command *cmd,
 
 /* ================= EXPAND REDIRS ================= */
 
-static void	expand_redirs(t_command *cmd,
-	t_env *env, int last_status)
+static void	expand_redirs(t_command *cmd, t_env *env, int last_status)
 {
 	t_redir	*r;
 	char	*new;
@@ -73,8 +80,7 @@ static void	expand_redirs(t_command *cmd,
 	{
 		if (r->type != T_HEREDOC)
 		{
-			new = expand_string(
-				r->file, env, last_status);
+			new = expand_string(r->file, env, last_status);
 			free(r->file);
 			r->file = new;
 		}
@@ -84,7 +90,7 @@ static void	expand_redirs(t_command *cmd,
 
 /* ================= MAIN EXPANDER ================= */
 
-void expander(t_command *cmds, t_shell *s)
+void	expander(t_command *cmds, t_shell *s)
 {
 	while (cmds)
 	{
