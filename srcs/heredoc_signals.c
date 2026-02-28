@@ -1,49 +1,34 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   signals.c                                          :+:      :+:    :+:   */
+/*   heredoc_signals.c                                  :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: fares-_-q7h <fares-_-q7h@student.42.fr>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2026/02/28 16:09:34 by farmoham          #+#    #+#             */
-/*   Updated: 2026/03/01 00:23:53 by fares-_-q7h      ###   ########.fr       */
+/*   Created: 2026/03/01 00:24:26 by fares-_-q7h       #+#    #+#             */
+/*   Updated: 2026/03/01 00:44:40 by fares-_-q7h      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-volatile sig_atomic_t	g_sig = 0;
-
-static void	sigint_interactive(int signo)
+static void sigint_heredoc(int sig)
 {
-	(void)signo;
+	(void)sig;
 	g_sig = 130;
 	write(1, "\n", 1);
 	rl_on_new_line();
 	rl_replace_line("", 0);
-	rl_redisplay();
+	rl_done = 1;
 }
 
-
-void	init_signals_interactive(void)
+void init_signals_heredoc(void)
 {
-	struct sigaction	sa;
+	struct sigaction sa;
 
-	sa.sa_handler = sigint_interactive;
+	sa.sa_handler = sigint_heredoc;
 	sigemptyset(&sa.sa_mask);
-	sa.sa_flags = 0;
+	sa.sa_flags = SA_RESTART;
 	sigaction(SIGINT, &sa, NULL);
-	signal(SIGQUIT, SIG_IGN);
-}
-
-void	init_signals_child(void)
-{
-	signal(SIGINT, SIG_DFL);
-	signal(SIGQUIT, SIG_DFL);
-}
-
-void	init_signals_exec(void)
-{
-	signal(SIGINT, SIG_IGN);
 	signal(SIGQUIT, SIG_IGN);
 }

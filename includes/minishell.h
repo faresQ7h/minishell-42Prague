@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: farmoham <farmoham@student.42.fr>          +#+  +:+       +#+        */
+/*   By: fares-_-q7h <fares-_-q7h@student.42.fr>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/28 16:19:38 by farmoham          #+#    #+#             */
-/*   Updated: 2026/02/28 16:21:11 by farmoham         ###   ########.fr       */
+/*   Updated: 2026/03/01 00:26:57 by fares-_-q7h      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -187,6 +187,9 @@ void							free_str(char **s);
 void							init_signals_interactive(void);
 void							init_signals_child(void);
 void							init_signals_exec(void);
+
+/* heredoc signal */
+void 							init_signals_heredoc(void);
 
 /* utils */
 int								is_empty(char *s);
