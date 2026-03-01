@@ -15,14 +15,14 @@
 /*
 ** cd builtin
 */
-static int	builtin_cd(char **argv, t_env **env)
+static int	builtin_cd(char **args, t_env **env)
 {
 	char	*path;
 
-	if (!argv[1])
+	if (!args[1])
 		path = env_get(*env, "HOME");
 	else
-		path = argv[1];
+		path = args[1];
 	if (!path || chdir(path) != 0)
 	{
 		write(2, "cd: error\n", 10);
@@ -48,22 +48,22 @@ static int	builtin_pwd(void)
 /*
 ** unset builtin
 */
-static int	builtin_unset(char **argv, t_env **env)
+static int	builtin_unset(char **args, t_env **env)
 {
 	int	i;
 	int	status;
 
 	i = 1;
 	status = 0;
-	while (argv[i])
+	while (args[i])
 	{
-		if (!valid_identifier(argv[i]))
+		if (!valid_identifier(args[i]))
 		{
 			write(2, "unset: not a valid identifier\n", 31);
 			status = 1;
 		}
 		else
-			env_unset(env, argv[i]);
+			env_unset(env, args[i]);
 		i++;
 	}
 	return (status);
@@ -72,13 +72,13 @@ static int	builtin_unset(char **argv, t_env **env)
 /*
 ** exit builtin
 */
-static int	builtin_exit(char **argv)
+static int	builtin_exit(char **args)
 {
 	int	status;
 
 	status = 0;
 	if (argv[1])
-		status = ft_atoi(argv[1]);
+		status = ft_atoi(args[1]);
 	return (status);
 }
 
@@ -87,24 +87,24 @@ static int	builtin_exit(char **argv)
 */
 int	exec_builtin(t_command *cmd, t_shell *s)
 {
-	char	**argv;
+	char	**args;
 
-	argv = cmd->args;
-	if (!argv || !argv[0])
+	args = cmd->args;
+	if (!args || !args[0])
 		return (1);
-	if (!ft_strcmp(argv[0], "echo"))
-		return (builtin_echo(argv));
-	else if (!ft_strcmp(argv[0], "cd"))
-		return (builtin_cd(argv, &s->env));
-	else if (!ft_strcmp(argv[0], "pwd"))
+	if (!ft_strcmp(args[0], "echo"))
+		return (builtin_echo(args));
+	else if (!ft_strcmp(args[0], "cd"))
+		return (builtin_cd(args, &s->env));
+	else if (!ft_strcmp(args[0], "pwd"))
 		return (builtin_pwd());
-	else if (!ft_strcmp(argv[0], "env"))
+	else if (!ft_strcmp(args[0], "env"))
 		return (builtin_env(s->env));
-	else if (!ft_strcmp(argv[0], "export"))
-		return (builtin_export(argv, &(s->env)));
-	else if (!ft_strcmp(argv[0], "unset"))
-		return (builtin_unset(argv, &(s->env)));
-	else if (!ft_strcmp(argv[0], "exit"))
-		return (builtin_exit(argv));
+	else if (!ft_strcmp(args[0], "export"))
+		return (builtin_export(args, &(s->env)));
+	else if (!ft_strcmp(args[0], "unset"))
+		return (builtin_unset(args, &(s->env)));
+	else if (!ft_strcmp(args[0], "exit"))
+		return (builtin_exit(args));
 	return (1);
 }
