@@ -39,22 +39,22 @@ int	is_builtin(char *cmd)
 /*
 ** echo builtin
 */
-int	builtin_echo(char **argv)
+int	builtin_echo(char **args)
 {
 	int	i;
 	int	nl;
 
 	i = 1;
 	nl = 1;
-	if (argv[1] && !ft_strcmp(argv[1], "-n"))
+	if (args[1] && !ft_strcmp(args[1], "-n"))
 	{
 		nl = 0;
 		i++;
 	}
-	while (argv[i])
+	while (args[i])
 	{
-		write(1, argv[i], ft_strlen(argv[i]));
-		if (argv[i + 1])
+		write(1, args[i], ft_strlen(args[i]));
+		if (args[i + 1])
 			write(1, " ", 1);
 		i++;
 	}
@@ -91,27 +91,29 @@ static void	export_error_set_status(int *status)
 	*status = 1;
 }
 
-int	builtin_export(char **argv, t_env **env)
+int	builtin_export(char **args, t_env **env)
 {
 	int		i;
 	char	*eq;
 	int		status;
 
+	if (args && !args[1])
+		return (builtin_env(*env));
 	i = 1;
 	status = 0;
-	while (argv[i])
+	while (args[i])
 	{
-		eq = ft_strchr(argv[i], '=');
+		eq = ft_strchr(args[i], '=');
 		if (eq)
 		{
 			*eq = '\0';
-			if (!valid_identifier(argv[i]))
+			if (!valid_identifier(args[i]))
 				export_error_set_status(&status);
 			else
-				env_set(env, argv[i], eq + 1);
+				env_set(env, args[i], eq + 1);
 			*eq = '=';
 		}
-		else if (!valid_identifier(argv[i]))
+		else if (!valid_identifier(args[i]))
 			export_error_set_status(&status);
 		i++;
 	}
