@@ -6,7 +6,7 @@
 /*   By: farmoham <farmoham@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/28 15:41:26 by farmoham          #+#    #+#             */
-/*   Updated: 2026/02/28 15:46:56 by farmoham         ###   ########.fr       */
+/*   Updated: 2026/03/01 13:54:34 by farmoham         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -77,7 +77,7 @@ static int	builtin_exit(char **args)
 	int	status;
 
 	status = 0;
-	if (argv[1])
+	if (args[1])
 		status = ft_atoi(args[1]);
 	return (status);
 }

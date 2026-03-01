@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: fares-_-q7h <fares-_-q7h@student.42.fr>    +#+  +:+       +#+        */
+/*   By: farmoham <farmoham@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/28 16:19:38 by farmoham          #+#    #+#             */
-/*   Updated: 2026/03/01 02:23:21 by fares-_-q7h      ###   ########.fr       */
+/*   Updated: 2026/03/01 13:55:03 by farmoham         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -161,10 +161,10 @@ int								apply_redirections(t_command *cmd);
 
 /* builtins */
 int								is_builtin(char *cmd);
-int								builtin_echo(char **argv);
+int								builtin_echo(char **args);
 int								builtin_env(t_env *env);
 int								exec_builtin(t_command *cmd, t_shell *s);
-int								builtin_export(char **argv, t_env **env);
+int								builtin_export(char **args, t_env **env);
 
 /* env */
 t_env							*env_new(char *key, char *value);
