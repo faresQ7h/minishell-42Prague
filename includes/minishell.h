@@ -114,8 +114,6 @@ char							*handle_operator(char *line, int *i);
 int								parser(t_token *tokens, t_command **commands);
 
 /*parser utils*/
-int								is_quoted(char *s);
-char							*strip_quotes(char *s);
 int								handle_pipe(t_token **tok, t_command **current);
 int								handle_redirection(t_token **tok,
 									t_command *cmd);
