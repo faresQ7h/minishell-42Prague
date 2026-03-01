@@ -63,7 +63,7 @@ static void	exec_external(t_command *cmd, t_shell *s)
 }
 
 static void	child_process(t_command *cmd, t_shell *s, int prev_fd,
-			int pipe_fd[2])
+		int pipe_fd[2])
 {
 	int	status;
 

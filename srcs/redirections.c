@@ -59,7 +59,7 @@ static int	handle_heredoc(t_redir *r)
 
 int	apply_redirections(t_command *cmd)
 {
-	t_redir		*r;
+	t_redir	*r;
 
 	r = cmd->redirs;
 	while (r)

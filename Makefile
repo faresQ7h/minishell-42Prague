@@ -44,8 +44,7 @@ SRCS		= main.c \
               executor.c \
               executor_utils.c \
               prompt.c \
-              wait.c \
-              heredoc_signals.c
+              wait.c 
 
 SRCS		:= $(addprefix $(SRC_DIR)/, $(SRCS))
 OBJS		:= $(SRCS:.c=.o)

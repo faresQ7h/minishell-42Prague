@@ -46,8 +46,8 @@ static int	process_word(t_token **head, char *line, int *i)
 
 t_token	*lexer(char *line)
 {
-	t_token		*head;
-	int			i;
+	t_token	*head;
+	int		i;
 
 	head = NULL;
 	i = 0;

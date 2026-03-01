@@ -24,7 +24,6 @@ static void	sigint_interactive(int signo)
 	rl_redisplay();
 }
 
-
 void	init_signals_interactive(void)
 {
 	struct sigaction	sa;
