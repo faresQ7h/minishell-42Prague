@@ -1,4 +1,4 @@
-*This project has been created as part of the 42 curriculum by fares-_-q7h, farmoham.*
+*This project has been created as part of the 42 curriculum by Ojetimi, farmoham.*
 
 # Minishell
 
